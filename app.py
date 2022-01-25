@@ -1,12 +1,17 @@
 import asyncio
 import confluent_kafka
+from aiokafka import AIOKafkaConsumer
 from confluent_kafka import KafkaException
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,WebSocket
+from starlette.endpoints import WebSocketEndpoint
+
 from pydantic import BaseModel
 from time import time
 from threading import Thread
 import uvicorn
 import json
+from loguru import logger
+import typing
 
 config = {"bootstrap.servers": "localhost:9092"}
 app = FastAPI()
@@ -89,6 +94,18 @@ class Item(BaseModel):
     name: str
     price: float
 
+class ConsumerResponse(BaseModel):
+    topic: str
+    timestamp: str
+    name: str
+    message_id: str
+    lat: float
+    lon: float
+
+async def consume(consumer, topicname):
+    async for msg in consumer:
+        return msg.value.decode()
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -115,6 +132,55 @@ async def create_item1(item: Item, topic: str):
     except KafkaException as ex:
         raise HTTPException(status_code=500, detail=ex.args[0].str())
 
+
+
+@app.websocket_route("/consumer/{topicname}")
+class WebsocketConsumer(WebSocketEndpoint):
+    async def on_connect(self, websocket: WebSocket) -> None:
+
+        # get topicname from path until I have an alternative
+        topicname = websocket["path"].split("/")[2] 
+        logger.info(f"topicname: {topicname}")
+
+        await websocket.accept()
+        await websocket.send_json({"Message": "connected"})
+
+        loop = asyncio.get_event_loop()
+        self.consumer = AIOKafkaConsumer(
+            topicname,
+            loop=loop,
+            client_id="FastAPI-Consumer",
+            bootstrap_servers="localhost:9092",
+            enable_auto_commit=False,
+        )
+
+        await self.consumer.start()
+
+        self.consumer_task = asyncio.create_task(
+            self.send_consumer_message(websocket=websocket, topicname=topicname)
+        )
+
+        logger.info("connected")
+
+    async def on_disconnect(self, websocket: WebSocket, close_code: int) -> None:
+        self.consumer_task.cancel()
+        await self.consumer.stop()
+        logger.info(f"counter: {self.counter}")
+        logger.info("disconnected")
+        logger.info("consumer stopped")
+
+    async def on_receive(self, websocket: WebSocket, data: typing.Any) -> None:
+        logger.info(f"received: {data}")
+        await websocket.send_json({"Message": data})
+
+    async def send_consumer_message(self, websocket: WebSocket, topicname: str) -> None:
+        self.counter = 0
+        while True:
+            data = await consume(self.consumer, topicname)
+            response = ConsumerResponse(topic=topicname, **json.loads(data))
+            logger.info(response)
+            await websocket.send_text(f"{response.json()}")
+            self.counter = self.counter + 1
 
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)
