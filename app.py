@@ -108,6 +108,7 @@ async def kafka_consume(websocket: WebSocket, topic: str, group: str="default"):
         loop=loop,
         enable_auto_commit = True,
         session_timeout_ms = 6000,
+        heartbeat_interval_ms=3000,
         auto_offset_reset='latest', 
         auto_commit_interval_ms=5000,
 
