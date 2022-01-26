@@ -4,6 +4,8 @@
 https://iwpnd.pw/articles/2020-03/apache-kafka-fastapi-geostream 
 https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
 
+https://github.com/valentin994/fast-api-crud-boilerplate/blob/master/main.py
+
 #### Containers
 	Kafka
 	Zookeeper

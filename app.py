@@ -3,6 +3,7 @@ import confluent_kafka
 from aiokafka import AIOKafkaConsumer
 from confluent_kafka import KafkaException
 from fastapi import FastAPI, HTTPException,WebSocket
+from fastapi.staticfiles import StaticFiles
 from starlette.endpoints import WebSocketEndpoint
 
 from pydantic import BaseModel
@@ -13,8 +14,25 @@ import json
 from loguru import logger
 import typing
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
+
 config = {"bootstrap.servers": "localhost:9092"}
 app = FastAPI()
+
+origins = [
+    "ws://localhost:8000",
+    "http://localhost:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 
@@ -123,6 +141,7 @@ def shutdown_event():
 def read_root():
     return {"status": "ok"}
 
+app.mount("/public", StaticFiles(directory="public"), name="static")
 
 @app.post("/producer/{topic}")
 async def create_item1(item: Item, topic: str):
@@ -132,6 +151,31 @@ async def create_item1(item: Item, topic: str):
     except KafkaException as ex:
         raise HTTPException(status_code=500, detail=ex.args[0].str())
 
+
+async def kafka_consume(websocket: WebSocket):
+    """Consumer for websocket to stream to the frontend, connecting on default kafka consumer (has to be up and running for it to work)
+    Args:
+        websocket (WebSocket): websocket for clients to connect to
+    """
+    consumer = AIOKafkaConsumer(
+        "bill",
+        bootstrap_servers="localhost:9092",
+    )
+    await consumer.start()
+    try:
+        async for msg in consumer:
+            await websocket.send_text(msg.value.decode("utf-8"))
+    finally:
+        await consumer.stop()
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    """This websocket is used for broadcasting messages from kafka stream
+    Args:
+        websocket (WebSocket): websocket for clients to connect to
+    """
+    await websocket.accept()
+    await kafka_consume(websocket)
 
 
 @app.websocket_route("/consumer/{topicname}")
