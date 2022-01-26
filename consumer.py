@@ -9,6 +9,7 @@ consumer = KafkaConsumer(
      enable_auto_commit=True,
      group_id='python-consumer-group',
      value_deserializer=lambda x: loads(x.decode('utf-8')))
+consumer.poll(timeout_ms=1000)
 
 for message in consumer:
     message = message.value
