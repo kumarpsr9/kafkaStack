@@ -1,4 +1,6 @@
 import asyncio
+from asyncore import loop
+from cgitb import lookup
 from typing import Dict
 import confluent_kafka
 from aiokafka import AIOKafkaConsumer
@@ -95,11 +97,20 @@ async def create_item1(payload: Payload, topic: str):
 
 
 # Kafka Consumer Starts Here
+loop = asyncio.get_event_loop()
 async def kafka_consume(websocket: WebSocket, topic: str, group: str="default"):
+    
+
     consumer = AIOKafkaConsumer(
        topic,
         bootstrap_servers="localhost:9092",
         group_id=group,
+        loop=loop,
+        enable_auto_commit = True,
+        session_timeout_ms = 6000,
+        auto_offset_reset='latest', 
+        auto_commit_interval_ms=5000,
+
     )
     await consumer.start()
     try:

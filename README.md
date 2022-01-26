@@ -23,7 +23,7 @@ https://github.com/valentin994/fast-api-crud-boilerplate/blob/master/main.py
     http://127.0.0.1:8000/producer/<TOPIC_NAME>
     payload={} //JSON_MESSAGE
 
-##### CURL SYNTAX
+##### CURL command line syntax
     curl -X 'POST' \
     'http://127.0.0.1:8000/producer/bill' \
     -H 'accept: application/json' \
