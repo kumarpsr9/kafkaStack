@@ -65,7 +65,6 @@ class AIOProducer:
 aio_producer = None
 
 class Payload(BaseModel):
-    id: str = Field(default_factory=uuid4)
     data: dict = Field(default_factory=dict)
 
 
@@ -88,8 +87,9 @@ app.mount("/public", StaticFiles(directory="public"), name="static")
 @app.post("/producer/{topic}")
 async def create_item1(payload: Payload, topic: str):
     try:
+        payload.data["id"]=uuid4().hex
         result = await aio_producer.produce(topic, json.dumps(payload.dict()))
-        return {"timestamp": result.timestamp()}
+        return {"timestamp": result.timestamp(), "topic": topic, "value": payload.dict()}
     except KafkaException as ex:
         raise HTTPException(status_code=500, detail=ex.args[0].str())
 
@@ -119,4 +119,4 @@ async def websocket_endpoint(websocket: WebSocket, topicname: str):
 # Kafka Consumer Ends Here
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=8000)

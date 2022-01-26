@@ -7,7 +7,7 @@
     <title>Document</title>
     <script>
 
-var exampleSocket = new WebSocket("ws://127.0.0.1:8000/ws");
+var exampleSocket = new WebSocket("ws://127.0.0.1:8000/consumer/bill");
 
 exampleSocket.onmessage = function (event) {
   console.log(event.data);
