@@ -13,15 +13,15 @@ https://github.com/valentin994/fast-api-crud-boilerplate/blob/master/main.py
 	RESTAPI Producer with  FastApi
 
 ##### CMAK URL
-http://localhost:9000/
+    http://localhost:9000/
 
 ##### FastApi URL
-http://127.0.0.1:8000/
-http://127.0.0.1:8000/docs
+    http://127.0.0.1:8000/
+    http://127.0.0.1:8000/docs
 
 ##### POST REQUEST
-http://127.0.0.1:8000/producer/<TOPIC_NAME>
-payload={} //JSON_MESSAGE
+    http://127.0.0.1:8000/producer/<TOPIC_NAME>
+    payload={} //JSON_MESSAGE
 
 ##### CURL SYNTAX
 curl -X 'POST' \
