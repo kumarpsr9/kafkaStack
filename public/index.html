@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script>
-
-var exampleSocket = new WebSocket("ws://127.0.0.1:8000/consumer/bill");
-
-exampleSocket.onmessage = function (event) {
-  console.log(event.data);
-}
-
+        var consumerSocket = new WebSocket("ws://127.0.0.1:8000/consumer/bill");
+        consumerSocket.onmessage = function (event) {
+            console.log(event.data);
+        }
     </script>
 </head>
+
 <body>
     Welcome
 </body>
+
 </html>

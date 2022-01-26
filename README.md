@@ -24,15 +24,24 @@ https://github.com/valentin994/fast-api-crud-boilerplate/blob/master/main.py
     payload={} //JSON_MESSAGE
 
 ##### CURL SYNTAX
-curl -X 'POST' \
-  'http://127.0.0.1:8000/producer/bill' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "name": "TV",
-  "price": 5000
-}'
+    curl -X 'POST' \
+    'http://127.0.0.1:8000/producer/bill' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "name": "TV",
+    "price": 5000
+    }'
 
+
+#### Consumber JavaScript Websocket
+
+    ' <script>
+        var consumerSocket = new WebSocket("ws://127.0.0.1:8000/consumer/bill");
+        consumerSocket.onmessage = function (event) {
+            console.log(event.data);
+        }
+    </script>'
 
 
 
