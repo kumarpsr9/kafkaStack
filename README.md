@@ -36,12 +36,12 @@ https://github.com/valentin994/fast-api-crud-boilerplate/blob/master/main.py
 
 #### Consumber JavaScript Websocket
 
-    ' <script>
+    <script>
         var consumerSocket = new WebSocket("ws://127.0.0.1:8000/consumer/bill");
         consumerSocket.onmessage = function (event) {
             console.log(event.data);
         }
-    </script>'
+    </script>
 
 
 
