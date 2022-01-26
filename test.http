@@ -1,0 +1,11 @@
+
+POST http://localhost:5984/sms/  HTTP/1.1
+    content-type: application/json
+    Authorization: Basic admin Boss@8055
+    
+        {
+            "name": "test_doc_name",
+            "age": "test_doc_age"
+        }
+
+
