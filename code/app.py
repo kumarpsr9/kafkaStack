@@ -15,12 +15,12 @@ import json
 
 from fastapi.middleware.cors import CORSMiddleware
 
-config = {"bootstrap.servers": "localhost:9092"}
+config = {"bootstrap.servers": "kafka1:9092"}
 app = FastAPI()
 
 origins = [
-    "ws://localhost:8000",
-    "http://localhost:8000",
+    "ws://localhost:8002",
+    "http://localhost:8002",
 ]
 
 app.add_middleware(

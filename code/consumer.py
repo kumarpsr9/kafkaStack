@@ -5,7 +5,7 @@ import requests
 
 consumer = KafkaConsumer(
     'sms',
-     bootstrap_servers=['localhost:9092'],
+     bootstrap_servers=['kafka1:9092'],
      auto_offset_reset='earliest',
      enable_auto_commit=True,
      group_id='sms-consumer-group',
@@ -31,6 +31,6 @@ for message in consumer:
         "data":message["data"],
         "operator": result.json()
     }
-    logres=requests.post("http://127.0.0.1:5984/sms",auth=("admin","Boss@8055"),json=loads(dumps(resp)), verify=False)
+    logres=requests.post("http://couchdb:5984/sms",auth=("admin","Boss@8055"),json=loads(dumps(resp)), verify=False)
     #print(logres.json())
     #print('{} added'.format(message))

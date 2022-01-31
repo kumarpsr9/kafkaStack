@@ -64,6 +64,22 @@ services:
       - '9100:9100'
     volumes:
       - ${PWD}/data/bitnami:/bitnami
+    restart: always
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka1
+      - zoo1
+    environment:
+      ZK_HOSTS: "zoo1:2181"
+    volumes:
+      - ${PWD}/data/fastapi:/bitnami
+
 volumes:
   couchdb_data:
     driver: local
