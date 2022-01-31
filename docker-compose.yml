@@ -13,8 +13,7 @@ services:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_SERVERS: zoo1:2888:3888
     volumes:
-      - ./data/zookeeper/data:/var/lib/zookeeper/data
-      - ./data/zookeeper/log:/var/lib/zookeeper/log
+      - ${PWD}/data/zookeeper:/var/lib/zookeeper
 
   kafka1:
     image: confluentinc/cp-kafka:6.2.1
@@ -40,8 +39,7 @@ services:
       - zoo1
     restart: always
     volumes:
-      - ./data/kafka/data:/var/lib/kafka/data
-      - ./data/kafka/logs:/var/lib/kafka/log
+      - ${PWD}/data/kafka:/var/lib/kafka
   
   cmak:
     image: hlebalbau/kafka-manager:stable
@@ -54,10 +52,10 @@ services:
     environment:
       ZK_HOSTS: "zoo1:2181"
     volumes:
-      - ./data/kafka-manager/logs:/kafka-manager/logs
+      - ${PWD}/data/kafka-manager/logs:/kafka-manager/logs
 
   couchdb:
-    image: docker.io/bitnami/couchdb:3
+    image: bitnami/couchdb:latest
     environment:
       - COUCHDB_PASSWORD=Boss@8055
     ports:
@@ -65,7 +63,7 @@ services:
       - '4369:4369'
       - '9100:9100'
     volumes:
-      - ./data/couchdb:/bitnami/couchdb
+      - ${PWD}/data/bitnami:/bitnami
 volumes:
   couchdb_data:
     driver: local
