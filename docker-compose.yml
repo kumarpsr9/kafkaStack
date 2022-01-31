@@ -78,7 +78,7 @@ services:
     environment:
       ZK_HOSTS: "zoo1:2181"
     volumes:
-      - ${PWD}/data/fastapi:/bitnami
+      - ${PWD}/code:/code
 
 volumes:
   couchdb_data:
