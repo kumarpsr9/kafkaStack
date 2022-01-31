@@ -84,7 +84,7 @@ def shutdown_event():
 def read_root():
     return {"status": "ok"}
 
-app.mount("/public", StaticFiles(directory="public"), name="static")
+app.mount("/code/public", StaticFiles(directory="public"), name="static")
 
 @app.post("/producer/{topic}")
 async def create_item1(payload: Payload, topic: str):
