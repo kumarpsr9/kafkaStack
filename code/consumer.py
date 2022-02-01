@@ -15,6 +15,8 @@ consumer.poll(timeout_ms=1000)
 
 print("Consumer started")
 
+requests.put("http://couchdb:5984/sms",auth=("admin","Boss@8055"), verify=False)
+
 for message in consumer:
     message = message.value
     payload={
@@ -25,7 +27,8 @@ for message in consumer:
         "message": message["data"]["message"] if None != message["data"]["message"] else "",
         "route": "4"
     }
-    url="http://retailsms.nettyfish.com/api/mt/SendSMS?user="+payload["user"]+"&password="+payload["password"]+"&senderid="+payload["senderid"]+"&channel=Trans&DCS=0&flashsms=0&number=91"+payload["mobile"]+"&text="+payload["message"]+"&route=4"
+    url="http://retailsms.nettyfish.com/api/mt/SendSMS?user="+payload["user"]+"&password="+payload["password"]+"&senderid="+payload["senderid"]+"&channel=Trans&DCS=0&flashsms=0&number="+payload["mobile"]+"&text="+payload["message"]+"&route=4"
+    print(url)
     result =requests.get(url,verify=False)
     resp={
         "data":message["data"],

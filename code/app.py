@@ -103,7 +103,7 @@ async def kafka_consume(websocket: WebSocket, topic: str, group: str="default"):
 
     consumer = AIOKafkaConsumer(
        topic,
-        bootstrap_servers="kafka1:9092",
+        bootstrap_servers="localhost:9092",
         group_id=group,
         loop=loop,
         enable_auto_commit = True,
@@ -131,4 +131,4 @@ async def websocket_endpoint(websocket: WebSocket, topicname: str):
 # Kafka Consumer Ends Here
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=8002)
+    uvicorn.run(app, host='0.0.0.0', port=8000)

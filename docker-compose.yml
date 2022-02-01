@@ -24,7 +24,7 @@ services:
       - "9999:9999"
       - "19092:19092"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://kafka1:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
@@ -68,17 +68,28 @@ services:
   fastapi:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-fastapi
     restart: always
     ports:
-      - "8080:8080"
+      - "8002:8002"
     depends_on:
       - kafka1
       - zoo1
-    environment:
-      ZK_HOSTS: "zoo1:2181"
+      - cmak
+      - couchdb
     volumes:
       - ${PWD}/code:/code
+  smsconsumer:
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    restart: always
+    depends_on:
+      - kafka1
+      - zoo1
+      - cmak
+      - couchdb
+      - fastapi
 
 volumes:
   couchdb_data:

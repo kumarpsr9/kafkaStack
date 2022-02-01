@@ -45,6 +45,8 @@ https://github.com/valentin994/fast-api-crud-boilerplate/blob/master/main.py
 
 
 
+CouchDB URL
+http://10.60.1.8:5984/sms/_all_docs?include_docs=true
 
 
 
