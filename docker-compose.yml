@@ -54,21 +54,11 @@ services:
     volumes:
       - ${PWD}/data/kafka-manager/logs:/kafka-manager/logs
 
-  couchdb:
-    image: bitnami/couchdb:latest
-    environment:
-      - COUCHDB_PASSWORD=Boss@8055
-    ports:
-      - '5984:5984'
-      - '4369:4369'
-      - '9100:9100'
-    volumes:
-      - ${PWD}/data/bitnami:/bitnami
-    restart: always
   fastapi:
     build:
       context: .
       dockerfile: Dockerfile-fastapi
+    image: fastapi-kafka-producer
     restart: always
     ports:
       - "8002:8002"
@@ -76,23 +66,8 @@ services:
       - kafka1
       - zoo1
       - cmak
-      - couchdb
     volumes:
       - ${PWD}/code:/code
-  smsconsumer:
-    build:
-      context: .
-      dockerfile: Dockerfile-consumer
-    restart: always
-    depends_on:
-      - kafka1
-      - zoo1
-      - cmak
-      - couchdb
-      - fastapi
 
-volumes:
-  couchdb_data:
-    driver: local
 
     
