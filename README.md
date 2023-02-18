@@ -52,9 +52,6 @@ Overall, deploying Apache Kafka and FastAPI using Docker-compose can provide a s
 
 
 
-CouchDB URL
-http://10.60.1.8:5984/sms/_all_docs?include_docs=true
-
 
 
 
