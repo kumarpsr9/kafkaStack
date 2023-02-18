@@ -21,7 +21,12 @@ https://github.com/valentin994/fast-api-crud-boilerplate/blob/master/main.py
 
 ##### POST REQUEST
     http://127.0.0.1:8000/producer/<TOPIC_NAME>
-    payload={} //JSON_MESSAGE
+    payload={ 
+      data: { 
+	   "name": "TV",
+           "price": 5000
+	 } 
+   } //JSON_MESSAGE
 
 ##### CURL command line syntax
     curl -X 'POST' \
@@ -29,8 +34,10 @@ https://github.com/valentin994/fast-api-crud-boilerplate/blob/master/main.py
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
-    "name": "TV",
-    "price": 5000
+    	data: { 
+	"name": "TV",
+        "price": 5000
+	}
     }'
 
 
