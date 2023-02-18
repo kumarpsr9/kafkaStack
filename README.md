@@ -1,10 +1,10 @@
-# Kafka Stack with FastAPI
 
-##### Ref Documents
-https://iwpnd.pw/articles/2020-03/apache-kafka-fastapi-geostream 
-https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
+# Kafka, FastAPI & Docker - Deadly Combination
 
-https://github.com/valentin994/fast-api-crud-boilerplate/blob/master/main.py
+Apache Kafka and FastAPI make a powerful combination for building high-performance, real-time applications. Developers can build applications that are both fast and reliable, with minimal latency and maximum throughput. This makes it an ideal combination for building real-time data processing pipelines, as well as other high-performance applications that need to handle large volumes of data. Overall, Apache Kafka and FastAPI are a deadly combination for building fast, scalable, and reliable applications.
+
+Overall, deploying Apache Kafka and FastAPI using Docker-compose can provide a simple and efficient way to build and manage real-time data processing pipelines and other high-performance applications.
+
 
 #### Containers
 	Kafka
