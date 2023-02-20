@@ -1,5 +1,5 @@
 
-# Kafka, FastAPI & Docker - Deadly Combination
+# Kafka, FastAPI & Docker - An Awesome Combination
 
 Apache Kafka and FastAPI make a powerful combination for building high-performance, real-time applications. Developers can build applications that are both fast and reliable, with minimal latency and maximum throughput. This makes it an ideal combination for building real-time data processing pipelines, as well as other high-performance applications that need to handle large volumes of data. Overall, Apache Kafka and FastAPI are a deadly combination for building fast, scalable, and reliable applications.
 
