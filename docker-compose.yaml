@@ -1,0 +1,63 @@
+version: '3'
+services:
+  zoo1:
+    image: confluentinc/cp-zookeeper:7.3.2
+    container_name: zoo1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - ${PWD}/data/zookeeper:/var/lib/zookeeper
+    restart: always
+
+  kafka1:
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: kafka1
+    ports:
+    # To learn about configuring Kafka for access across networks see
+    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      - 9092:9092
+      - 9999:9999
+      - 9094:9094
+      - 29092:29092
+    depends_on:
+      - zoo1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zoo1:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_IP:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9094,PLAINTEXT_INTERNAL://kafka1:29092,PLAINTEXT_IP://10.60.1.8:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_IP
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    volumes:
+      - ${PWD}/data/kafka:/var/lib/kafka
+    restart: always
+
+  cmak:
+    image: hlebalbau/kafka-manager:stable
+    restart: always
+    ports:
+      - 9000:9000
+    depends_on:
+      - zoo1
+      - kafka1
+    environment:
+      ZK_HOSTS: "zoo1:2181"
+    volumes:
+      - ${PWD}/data/kafka-manager/logs:/kafka-manager/logs
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile-fastapi
+    image: fastapi-kafka-producer
+    restart: always
+    ports:
+      - "8002:8002"
+    depends_on:
+      - zoo1
+      - kafka1
+      - cmak
+    volumes:
+      - ${PWD}/code:/code

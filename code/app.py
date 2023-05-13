@@ -15,7 +15,7 @@ import json
 
 from fastapi.middleware.cors import CORSMiddleware
 
-config = {"bootstrap.servers": "kafka1:9092"}
+config = {"bootstrap.servers": "kafka1:9094"}
 app = FastAPI()
 
 origins = [
@@ -103,7 +103,7 @@ async def kafka_consume(websocket: WebSocket, topic: str, group: str="default"):
 
     consumer = AIOKafkaConsumer(
        topic,
-        bootstrap_servers="localhost:9092",
+        bootstrap_servers="kakfa1:9094",
         group_id=group,
         loop=loop,
         enable_auto_commit = True,
