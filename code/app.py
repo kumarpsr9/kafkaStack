@@ -21,6 +21,8 @@ app = FastAPI()
 origins = [
     "ws://localhost:8002",
     "http://localhost:8002",
+    "https://apis.aditya.ac.in",
+    "*"
 ]
 
 app.add_middleware(
@@ -103,7 +105,7 @@ async def kafka_consume(websocket: WebSocket, topic: str, group: str="default"):
 
     consumer = AIOKafkaConsumer(
        topic,
-        bootstrap_servers="kakfa1:9094",
+        bootstrap_servers="kafka1:9094",
         group_id=group,
         loop=loop,
         enable_auto_commit = True,
