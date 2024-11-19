@@ -1,0 +1,34 @@
+# Sample JMX Exporter Configuration for Kafka
+startDelaySeconds: 0
+jmxUrl: service:jmx:rmi:///jndi/rmi://10.60.1.8:9101/jmxrmi
+ssl: false
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+rules:
+  - pattern: ".*"
+    name: "default_metric"
+    type: UNTYPED
+  # Kafka Broker Metrics
+  - pattern: kafka.server<type=BrokerTopicMetrics, name=(.+)><>Count
+    name: kafka_broker_topic_metrics_$1_total
+    type: COUNTER
+
+  # Request Metrics
+  - pattern: kafka.network<type=RequestMetrics, name=(.+), request=(.+)><>Count
+    name: kafka_request_metrics_$1_$2_total
+    type: COUNTER
+
+  # Partition Count Metrics
+  - pattern: kafka.cluster<type=Partition, name=(.+)><>Value
+    name: kafka_partition_$1
+    type: GAUGE
+
+  # Log Flush Metrics
+  - pattern: kafka.log<type=LogFlushStats, name=LogFlushRateAndTimeMs><>Count
+    name: kafka_log_flush_total
+    type: COUNTER
+
+  # Controller Metrics
+  - pattern: kafka.controller<type=ControllerStats, name=(.+)><>Count
+    name: kafka_controller_$1_total
+    type: COUNTER

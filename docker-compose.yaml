@@ -20,9 +20,18 @@ services:
       - 9999:9999
       - 9094:9094
       - 29092:29092
+      - 9101:9101
     depends_on:
       - zoo1
     environment:
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: 10.60.1.8
+      KAFKA_JMX_OPTS: >-
+        -Dcom.sun.management.jmxremote
+        -Dcom.sun.management.jmxremote.authenticate=false
+        -Dcom.sun.management.jmxremote.ssl=false
+        -Djava.rmi.server.hostname=10.60.1.8
+        -Dcom.sun.management.jmxremote.rmi.port=9101
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zoo1:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_IP:PLAINTEXT
@@ -61,3 +70,18 @@ services:
       - cmak
     volumes:
       - ${PWD}/code:/code
+  jmx-exporter:
+    image: bitnami/jmx-exporter:latest
+    ports:
+      - "5556:5556"
+    volumes:
+      - ./jmx_exporter_config.yml:/opt/bitnami/jmx-exporter/config.yml
+    environment:
+      JMX_PORT: 9101
+      JMX_HOST: 10.60.1.8
+      EXPORT_HOST: 0.0.0.0
+    command:
+      - '5556'
+      - '/opt/bitnami/jmx-exporter/config.yml'
+    depends_on:
+      - kafka1
